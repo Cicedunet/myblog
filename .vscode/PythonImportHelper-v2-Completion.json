@@ -32,6 +32,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -70,6 +86,14 @@
         "description": "django.apps",
         "isExtraImport": true,
         "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "forms",
+        "importPath": "django",
+        "description": "django",
+        "isExtraImport": true,
+        "detail": "django",
         "documentation": {}
     },
     {
@@ -113,14 +137,6 @@
         "documentation": {}
     },
     {
-        "label": "path",
-        "importPath": "django.urls",
-        "description": "django.urls",
-        "isExtraImport": true,
-        "detail": "django.urls",
-        "documentation": {}
-    },
-    {
         "label": "include",
         "importPath": "django.urls",
         "description": "django.urls",
@@ -130,6 +146,14 @@
     },
     {
         "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "get_object_or_404",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
         "isExtraImport": true,
@@ -205,6 +229,15 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "blog.migrations.0003_comment",
+        "description": "blog.migrations.0003_comment",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('blog', '0002_alter_post_options'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Comment',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),\n                ('name', models.CharField(max_length=80)),",
+        "detail": "blog.migrations.0003_comment",
+        "documentation": {}
+    },
+    {
         "label": "PostAdmin",
         "kind": 6,
         "importPath": "blog.admin",
@@ -223,6 +256,15 @@
         "documentation": {}
     },
     {
+        "label": "CommentForm",
+        "kind": 6,
+        "importPath": "blog.forms",
+        "description": "blog.forms",
+        "peekOfCode": "class CommentForm(forms.ModelForm):\n    class Meta:\n        model = Comment\n        fields = ('name', 'email', 'body')",
+        "detail": "blog.forms",
+        "documentation": {}
+    },
+    {
         "label": "Post",
         "kind": 6,
         "importPath": "blog.models",
@@ -232,12 +274,12 @@
         "documentation": {}
     },
     {
-        "label": "urlpatterns",
-        "kind": 5,
-        "importPath": "blog.url",
-        "description": "blog.url",
-        "peekOfCode": "urlpatterns = [\n    path(\"\", views.index),\n    path(\"post\", views.list,name=\"list\"),\n   path(\"post/<int:id>/\", views.detail, name=\"detail\"),\n    ##path(\"post/new/\", views.create, name=\"create\"),\n]",
-        "detail": "blog.url",
+        "label": "Comment",
+        "kind": 6,
+        "importPath": "blog.models",
+        "description": "blog.models",
+        "peekOfCode": "class Comment(models.Model):\n    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)\n    name = models.CharField(max_length=80)\n    email = models.EmailField()\n    body = models.TextField()\n    created = models.DateTimeField(auto_now_add=True)\n    updated = models.DateTimeField(auto_now=True)\n    active = models.BooleanField(default=True)\n    class Meta:\n        ordering = ('created',)",
+        "detail": "blog.models",
         "documentation": {}
     },
     {
@@ -245,7 +287,7 @@
         "kind": 5,
         "importPath": "blog.urls",
         "description": "blog.urls",
-        "peekOfCode": "urlpatterns = [\n    path('', views.list, name='post_list'),\n       path('post', views.list, name='post_list'),\n    path('post/<int:id>/', views.detail, name='post_detail'),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('', views.index, name='index'),\n       path('post', views.list, name='post_list'),\n    path('post/<int:id>/', views.detail, name='post_detail'),\n]",
         "detail": "blog.urls",
         "documentation": {}
     },
@@ -254,7 +296,7 @@
         "kind": 2,
         "importPath": "blog.views",
         "description": "blog.views",
-        "peekOfCode": "def index(request):\n    return render(request, 'blog/base.html')\ndef list(request):\n    post_list = Post.objects.all()\n    paginator = Paginator(post_list, 1)  # 5 posts per page\n    page_number = request.GET.get('page')\n    page_obj = paginator.get_page(page_number)\n    return render(request, 'blog/post_list.html', {'page_obj': page_obj})\ndef detail(request, id):\n    post = Post.objects.get(id=id)",
+        "peekOfCode": "def index(request):\n    return render(request, 'blog/base.html')\ndef list(request):\n    post_list = Post.objects.all()\n    paginator = Paginator(post_list, 2)  # 5 posts per page\n    page_number = request.GET.get('page')\n    page_obj = paginator.get_page(page_number)\n   # paginator = Paginator(post_list, 2)  # 5 posts per page\n   # page_number = request.GET.get('page')\n   # page_obj = paginator.get_page(page_number)",
         "detail": "blog.views",
         "documentation": {}
     },
@@ -263,7 +305,7 @@
         "kind": 2,
         "importPath": "blog.views",
         "description": "blog.views",
-        "peekOfCode": "def list(request):\n    post_list = Post.objects.all()\n    paginator = Paginator(post_list, 1)  # 5 posts per page\n    page_number = request.GET.get('page')\n    page_obj = paginator.get_page(page_number)\n    return render(request, 'blog/post_list.html', {'page_obj': page_obj})\ndef detail(request, id):\n    post = Post.objects.get(id=id)\n    return render(request, \"blog/post_detail.html\", {\"post_detail\": post})",
+        "peekOfCode": "def list(request):\n    post_list = Post.objects.all()\n    paginator = Paginator(post_list, 2)  # 5 posts per page\n    page_number = request.GET.get('page')\n    page_obj = paginator.get_page(page_number)\n   # paginator = Paginator(post_list, 2)  # 5 posts per page\n   # page_number = request.GET.get('page')\n   # page_obj = paginator.get_page(page_number)\n    return render(request, 'blog/post_list.html', {'page_obj': page_obj})\ndef detail(request, id):",
         "detail": "blog.views",
         "documentation": {}
     },
@@ -272,7 +314,7 @@
         "kind": 2,
         "importPath": "blog.views",
         "description": "blog.views",
-        "peekOfCode": "def detail(request, id):\n    post = Post.objects.get(id=id)\n    return render(request, \"blog/post_detail.html\", {\"post_detail\": post})",
+        "peekOfCode": "def detail(request, id):\n    post = get_object_or_404(Post, id=id)\n    comments = post.comments.filter(active=True)\n    new_comment = None\n    if request.method == 'POST':\n        comment_form = CommentForm(data=request.POST)\n        if comment_form.is_valid():\n            new_comment = comment_form.save(commit=False)\n            new_comment.post = post\n            new_comment.save()",
         "detail": "blog.views",
         "documentation": {}
     },
